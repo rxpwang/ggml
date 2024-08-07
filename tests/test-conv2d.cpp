@@ -18,6 +18,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <stdlib.h>
 
 static void ggml_log_callback_default(ggml_log_level level, const char * text, void * user_data) {
     (void) level;
@@ -34,10 +35,13 @@ struct test_model {
     struct ggml_context * ctx;
 };
 
-void load_model(test_model & model, bool use_gpu = false) {
+//void load_model(test_model & model, bool use_gpu = false) {
+void load_model(test_model & model, bool use_gpu = false, int input_width=8, int input_height=6, int kernel_size=3) {
     // create data
-    int KW = 3, KH = 3, IC = 10, OC = 10;
-    int IW = 8, IH = 6, N = 1;
+    //int KW = 3, KH = 3, IC = 10, OC = 10;
+    //int IW = 8, IH = 6, N = 1;
+    int KW = kernel_size, KH = kernel_size, IC = 64, OC = 64;
+    int IW = input_width, IH = input_height, N = 1;
 
     // Initialize adata
     float * adata = new float[KW * KH * IC * OC];
@@ -171,12 +175,14 @@ struct ggml_cgraph * build_graph(const test_model& model) {
     return gf;
 }
 
-struct ggml_cgraph * compute_graph(const test_model & model, ggml_gallocr_t allocr) {
+//struct ggml_cgraph * compute_graph(const test_model & model, ggml_gallocr_t allocr) {
+struct ggml_cgraph * compute_graph(const test_model & model, ggml_gallocr_t allocr, int thread_num) {
     struct ggml_cgraph * gf = build_graph(model);
 
     // allocate tensors
     ggml_gallocr_alloc_graph(allocr, gf);
-    int n_threads = 1;
+    //int n_threads = 1;
+    int n_threads = thread_num;
 
     if (ggml_backend_is_cpu(model.backend)) {
         ggml_backend_cpu_set_n_threads(model.backend, n_threads);
@@ -195,12 +201,14 @@ struct ggml_cgraph * compute_graph(const test_model & model, ggml_gallocr_t allo
     return gf;
 }
 
-int main(void)
+//int main(void)
+int main(int argc, char *argv[])
 {
     ggml_time_init();
 
     test_model model;
-    load_model(model, true);
+    //load_model(model, true);
+    load_model(model, atoi(argv[4]), atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 
     ggml_gallocr_t allocr = NULL;
 
@@ -216,7 +224,13 @@ int main(void)
         fprintf(stderr, "%s: compute buffer size: %.2f MB\n", __func__, mem_size/1024.0f/1024.0f);
     }
 
-    struct ggml_cgraph * gf_res = compute_graph(model, allocr);
+    //struct ggml_cgraph * gf_res = compute_graph(model, allocr);
+    int64_t start_time = ggml_time_us();
+    struct ggml_cgraph * gf_res = compute_graph(model, allocr, atoi(argv[5]));
+    int64_t end_time = ggml_time_us();
+    printf("\nMain compute finished.");
+    fprintf(stderr, "%s: Latency: %f s\n", __func__, (end_time - start_time) / 1000000.0);
+
 
     struct ggml_tensor * im2col_res = NULL;
     struct ggml_tensor * conv2d_res = NULL;

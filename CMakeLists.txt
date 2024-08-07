@@ -112,7 +112,7 @@ set(GGML_BLAS_VENDOR ${GGML_BLAS_VENDOR_DEFAULT} CACHE STRING
                                             "ggml: BLAS library vendor")
 option(GGML_LLAMAFILE                       "ggml: use LLAMAFILE"                             OFF)
 
-option(GGML_CUDA                            "ggml: use CUDA"                                  OFF)
+option(GGML_CUDA                            "ggml: use CUDA"                                  ON)
 option(GGML_CUDA_FORCE_DMMV                 "ggml: use dmmv instead of mmvq CUDA kernels"     OFF)
 option(GGML_CUDA_FORCE_MMQ                  "ggml: use mmq kernels instead of cuBLAS"         OFF)
 option(GGML_CUDA_FORCE_CUBLAS               "ggml: always use cuBLAS instead of mmq kernels"  OFF)
@@ -154,7 +154,8 @@ set   (GGML_SYCL_TARGET "INTEL" CACHE STRING
 
 # extra artifacts
 option(GGML_BUILD_TESTS    "ggml: build tests"    ${GGML_STANDALONE})
-option(GGML_BUILD_EXAMPLES "ggml: build examples" ${GGML_STANDALONE})
+#option(GGML_BUILD_EXAMPLES "ggml: build examples" ${GGML_STANDALONE})
+option(GGML_BUILD_EXAMPLES "ggml: build examples" OFF)
 
 #
 # dependencies
