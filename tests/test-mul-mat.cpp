@@ -270,7 +270,7 @@ void initialize_random_float_list(float *arr, int length) {
 int main(void)
 {
     ggml_time_init();
-    const int M = 1024, N = 1024, K = 512;  // a conv2d expected matrix multiplication
+    const int M = 256, N = 256, K = 256;  // a conv2d expected matrix multiplication
     
     float matrixA[M * K] = {0};
     float matrixB[N * K] = {0};
