@@ -157,8 +157,11 @@ struct ggml_tensor* compute(const test_model & model, ggml_gallocr_t allocr) {
         ggml_backend_metal_set_n_cb(model.backend, n_threads);
     }
 #endif
-
+    int64_t start_time = ggml_time_us();
     ggml_backend_graph_compute(model.backend, gf);
+    int64_t end_time = ggml_time_us();
+    printf("\n compute only finished.");
+    fprintf(stderr, "%s: compute only Latency: %f s\n", __func__, (end_time - start_time) / 1000000.0);
 
     //ggml_graph_print(gf);
 
@@ -267,23 +270,26 @@ void initialize_random_float_list(float *arr, int length) {
     }
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
     ggml_time_init();
-    const int M = 256, N = 256, K = 256;  // a conv2d expected matrix multiplication
+    int M = atoi(argv[1]), N = atoi(argv[2]), K = atoi(argv[3]);  // a conv2d expected matrix multiplication
     
-    float matrixA[M * K] = {0};
-    float matrixB[N * K] = {0};
+    //float matrixA[M * K] = {0};
+    //float matrixB[N * K] = {0};
+    float *matrixA = (float *)calloc(M * K, sizeof(float));
+    float *matrixB = (float *)calloc(K * N, sizeof(float));
     initialize_random_float_list(matrixA, M*K);
     initialize_random_float_list(matrixB, N*K);
 
-    float expected_result[M * N] = {0};
+    //float expected_result[M * N] = {0};
+    float *expected_result = (float *)calloc(M * N, sizeof(float));
     bool passed = true;
 
     //perform_gemm_test(matrixA, matrixB, expected_result, M, N, K);
 
     test_model model;
-    load_model(model, matrixA, matrixB, M, N, K, true);
+    load_model(model, matrixA, matrixB, M, N, K, atoi(argv[4]));
 
     ggml_gallocr_t allocr = NULL;
 
