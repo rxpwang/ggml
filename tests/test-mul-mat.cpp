@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 #include <stdlib.h>
+#include <time.h>
 
 
 struct test_model {
@@ -157,12 +158,7 @@ struct ggml_tensor* compute(const test_model & model, ggml_gallocr_t allocr) {
         ggml_backend_metal_set_n_cb(model.backend, n_threads);
     }
 #endif
-    int64_t start_time = ggml_time_us();
     ggml_backend_graph_compute(model.backend, gf);
-    int64_t end_time = ggml_time_us();
-    printf("\n compute only finished.");
-    fprintf(stderr, "%s: compute only Latency: %f s\n", __func__, (end_time - start_time) / 1000000.0);
-
     //ggml_graph_print(gf);
 
     // in this case, the output tensor is the last one in the graph
@@ -261,7 +257,7 @@ void perform_gemm_test(float* a, float* b, float* expected, int M, int N, int K)
 
 void initialize_random_float_list(float *arr, int length) {
     // Seed the random number generator
-    srand(5);
+    srand(time(0));
 
     // Populate the array with random float values
     for (int i = 0; i < length; i++) {
