@@ -146,7 +146,7 @@ struct ggml_tensor* compute(const test_model & model, ggml_gallocr_t allocr) {
 
     // allocate tensors
     ggml_gallocr_alloc_graph(allocr, gf);
-    int n_threads = 1;
+    int n_threads = 8;
 
     if (ggml_backend_is_cpu(model.backend)) {
         ggml_backend_cpu_set_n_threads(model.backend, n_threads);
