@@ -29,11 +29,11 @@ struct test_model {
     struct ggml_context * ctx;
 };
 
-void load_model(test_model & model, float* a, float* b, int M, int N, int K, bool use_gpu = false) {
+void load_model(test_model & model, float* a, float* b, int M, int N, int K, int B, bool use_gpu = false) {
     size_t buffer_size = 0;
     {
-        buffer_size += (M * N) * ggml_type_size(GGML_TYPE_F32); // tensor a
-        buffer_size += (N * K) * ggml_type_size(GGML_TYPE_F32); // tensor b
+        buffer_size += (M * N * B) * ggml_type_size(GGML_TYPE_F32); // tensor a
+        buffer_size += (N * K * B) * ggml_type_size(GGML_TYPE_F32); // tensor b
         buffer_size += 1024; // overhead
     }
 
@@ -79,10 +79,10 @@ void load_model(test_model & model, float* a, float* b, int M, int N, int K, boo
     model.ctx = ggml_init(params);
 
     // create tensors
-    model.a = ggml_new_tensor_2d(model.ctx, GGML_TYPE_F32, K, M);
-    printf("Matrix A: [%i, %i]\n", K, M);
-    model.b = ggml_new_tensor_2d(model.ctx, GGML_TYPE_F32, K, N);
-    printf("Matrix B: [%i, %i]\n", K, N);
+    model.a = ggml_new_tensor_3d(model.ctx, GGML_TYPE_F32, K, M, B);
+    printf("Matrix A: [%i, %i, %i]\n", K, M, B);
+    model.b = ggml_new_tensor_3d(model.ctx, GGML_TYPE_F32, K, N, B);
+    printf("Matrix B: [%i, %i, %i]\n", K, N, B);
 
     // create a allocator
     struct ggml_tallocr alloc = ggml_tallocr_new(model.buffer);
@@ -273,23 +273,23 @@ void initialize_random_float_list(float *arr, int length) {
 int main(int argc, char *argv[])
 {
     ggml_time_init();
-    int M = atoi(argv[1]), N = atoi(argv[2]), K = atoi(argv[3]);  // a conv2d expected matrix multiplication
+    int M = atoi(argv[1]), N = atoi(argv[2]), K = atoi(argv[3]), B = atoi(argv[4]);  // a conv2d expected matrix multiplication
     
     //float matrixA[M * K] = {0};
     //float matrixB[N * K] = {0};
-    float *matrixA = (float *)calloc(M * K, sizeof(float));
-    float *matrixB = (float *)calloc(K * N, sizeof(float));
-    initialize_random_float_list(matrixA, M*K);
-    initialize_random_float_list(matrixB, N*K);
+    float *matrixA = (float *)calloc(M * K * B, sizeof(float));
+    float *matrixB = (float *)calloc(K * N * B, sizeof(float));
+    initialize_random_float_list(matrixA, M*K*B);
+    initialize_random_float_list(matrixB, N*K*B);
 
     //float expected_result[M * N] = {0};
-    float *expected_result = (float *)calloc(M * N, sizeof(float));
+    float *expected_result = (float *)calloc(M * N * B, sizeof(float));
     bool passed = true;
 
     //perform_gemm_test(matrixA, matrixB, expected_result, M, N, K);
 
     test_model model;
-    load_model(model, matrixA, matrixB, M, N, K, atoi(argv[4]));
+    load_model(model, matrixA, matrixB, M, N, K, B, atoi(argv[5]));
 
     ggml_gallocr_t allocr = NULL;
 
@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
     printf("\nPerforming ggml_mul_mat test:\n");
 
     passed = true;
-    for(int i = 0; i < M * N; i++) {
+    for(int i = 0; i < M * N * B; i++) {
         if(out_data[i] != expected_result[i]) {
             passed = false;
             break;
@@ -330,7 +330,7 @@ int main(int argc, char *argv[])
     //    printf("\n");
     //}
     
-    printf("ggml_mul_mat (%d): %s\n", (int) ggml_nelements(result), passed && (ggml_nelements(result) == M * N) ? "\033[32mPASSED\033[0m" : "\033[31mFAILED\033[0m");
+    printf("ggml_mul_mat (%d): %s\n", (int) ggml_nelements(result), passed && (ggml_nelements(result) == M * N * B) ? "\033[32mPASSED\033[0m" : "\033[31mFAILED\033[0m");
 
     // free memory
     ggml_free(model.ctx);
