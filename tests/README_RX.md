@@ -1,5 +1,6 @@
 ## Readme writen by WRX for conv2d and mul-mat modification and measurement
 This readme is written by Rongxiang documenting the modification and usage of test-conv2d.cpp and test-mulmat.cpp.
+
 ### General measurement scheme
 In both measurement, we do the computation multiple times to get more accurate results. for each measurement, we pre-heat the computation for 200 times, and measure the 1000 times execution latency.The latency is shown after the informing message "1000 times compute finished."
 

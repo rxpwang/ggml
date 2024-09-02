@@ -42,6 +42,8 @@ e.g. for our experiment, the command is as below for input size (1000, 1000), ke
 
 build-cuda/bin/Release/test-conv2d 1000 1000 3 1 8
 
+
+
 By the above command, we get 1000 times computation latency. We can further get the average latency t_avg for one execution from that.
 
 The corresponding computation op counts is 69.632 billion operations,
@@ -57,7 +59,7 @@ e.g. for our experiments.
 
 In **matrix-matrix multiplication** case, for matrix (1024, 512) multiply (512 * 1024) with batch_size 1 and GPU backend, the command is as below.
 
-test-mulmat 1024 1024 512 1 1
+build-cuda/bin/Release/test-mul-mat 1024 1024 512 1 1
 
 By the above command, we get 1000 times computation latency. We can further get the average latency t_avg for one execution from that.
 
@@ -70,7 +72,7 @@ we can further get the ops/ms = 1.073 billion / t_avg
 
 for matrix (4096, 2048) multiply (2048, 2) with batch_size 32 and GPU backend, the command is as below
 
-test-mulmat 4096 2 2048 32 1
+build-cuda/bin/Release/test-mul-mat 4096 2 2048 32 1
 
 By the above command, we get 1000 times computation latency. We can further get the average latency t_avg for one execution from that.
 

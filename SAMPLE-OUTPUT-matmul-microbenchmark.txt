@@ -1,0 +1,118 @@
+GTX 1660s
+
+>>>>>>>>>>> conv2D
+
+$ build-cuda/bin/Release/test-conv2d 1000 1000 3 1 8
+load_model: ggml tensor size    = 336 bytes
+load_model: backend buffer size = 244.21 MB
+load_model: using CUDA backend
+ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+ggml_cuda_init: found 1 CUDA devices:
+  Device 0: NVIDIA GeForce GTX 1660 SUPER, compute capability 7.5, VMM: yes
+main: compute buffer size: 2441.41 MB
+
+1000 times compute finished.compute_graph: Latency: 264.022514 s
+
+Main compute finished.main: Latency: 316.136966 s
+
+Performing test:
+ggml_im2col (576000000): FAILED
+ggml_conv2d (64000000): FAILED 
+
+
+>>>>>>>>>>> mat-mat
+
+xzl@ryzen7-5800x MINGW64 /e/workspace-ggml/ggml-RW (master)
+$ build-cuda/bin/Release/test-mul-mat 1024 1024 512 1 1
+load_model: ggml tensor size    = 336 bytes
+load_model: backend buffer size = 4195328 bytes
+load_model: using CUDA backend
+ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+ggml_cuda_init: found 1 CUDA devices:
+  Device 0: NVIDIA GeForce GTX 1660 SUPER, compute capability 7.5, VMM: yes
+Matrix A: [512, 1024, 1]
+Matrix B: [512, 1024, 1]
+main: compute buffer size: 10.00 MB
+
+1000 times compute finished.compute: Latency: 0.663524 s
+
+Main compute finished.main: Latency: 0.845000 s
+
+Performing ggml_mul_mat test:
+ggml_mul_mat (1048576): FAILED
+
+
+>>>>>>>>>>> mat-vec
+
+xzl@ryzen7-5800x MINGW64 /e/workspace-ggml/ggml-RW (master)
+$ build-cuda/bin/Release/test-mul-mat 4096 2 2048 32 1
+load_model: ggml tensor size    = 336 bytes
+load_model: backend buffer size = 1074267136 bytes
+load_model: using CUDA backend
+ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+ggml_cuda_init: found 1 CUDA devices:
+  Device 0: NVIDIA GeForce GTX 1660 SUPER, compute capability 7.5, VMM: yes
+Matrix A: [2048, 4096, 32]
+Matrix B: [2048, 2, 32]
+main: compute buffer size: 2.50 MB
+
+1000 times compute finished.compute: Latency: 3.636976 s
+
+Main compute finished.main: Latency: 4.389021 s
+
+Performing ggml_mul_mat test:
+ggml_mul_mat (262144): FAILED
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+e:\workspace-ggml\ggml-RW>nvidia-smi
+Mon Sep  2 11:06:37 2024
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 555.85                 Driver Version: 555.85         CUDA Version: 12.5     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                  Driver-Model | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce GTX 1660 ...  WDDM  |   00000000:2B:00.0  On |                  N/A |
+| 55%   66C    P2            117W /  125W |    3504MiB /   6144MiB |    100%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A      2468    C+G   ...Programs\Microsoft VS Code\Code.exe      N/A      |
+|    0   N/A  N/A      2668    C+G   ...5.0_x64__cv1g1gvanyjgm\WhatsApp.exe      N/A      |
+|    0   N/A  N/A      4880    C+G   ...cal\Microsoft\OneDrive\OneDrive.exe      N/A      |
+|    0   N/A  N/A      7132    C+G   C:\Windows\explorer.exe                     N/A      |
+|    0   N/A  N/A      9496      C   ...ld-cuda\bin\Release\test-conv2d.exe      N/A      |
+|    0   N/A  N/A     12092    C+G   ....Search_cw5n1h2txyewy\SearchApp.exe      N/A      |
+|    0   N/A  N/A     14224    C+G   ...CBS_cw5n1h2txyewy\TextInputHost.exe      N/A      |
+|    0   N/A  N/A     17364    C+G   ...__8wekyb3d8bbwe\WindowsTerminal.exe      N/A      |
+|    0   N/A  N/A     17456    C+G   ...es (x86)\Dropbox\Client\Dropbox.exe      N/A      |
+|    0   N/A  N/A     18436    C+G   ...\cef\cef.win7x64\steamwebhelper.exe      N/A      |
+|    0   N/A  N/A     18656    C+G   ...1.0_x64__8wekyb3d8bbwe\Video.UI.exe      N/A      |
+|    0   N/A  N/A     20736    C+G   ...\cef\cef.win7x64\steamwebhelper.exe      N/A      |
+|    0   N/A  N/A     21160    C+G   ...ekyb3d8bbwe\PhoneExperienceHost.exe      N/A      |
+|    0   N/A  N/A     21452    C+G   ...es (x86)\Dropbox\Client\Dropbox.exe      N/A      |
+|    0   N/A  N/A     25104    C+G   ...5n1h2txyewy\ShellExperienceHost.exe      N/A      |
++-----------------------------------------------------------------------------------------+
+
+
