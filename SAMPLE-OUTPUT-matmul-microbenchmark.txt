@@ -67,18 +67,6 @@ Performing ggml_mul_mat test:
 ggml_mul_mat (262144): FAILED
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 e:\workspace-ggml\ggml-RW>nvidia-smi
 Mon Sep  2 11:06:37 2024
 +-----------------------------------------------------------------------------------------+
@@ -115,4 +103,73 @@ Mon Sep  2 11:06:37 2024
 |    0   N/A  N/A     25104    C+G   ...5n1h2txyewy\ShellExperienceHost.exe      N/A      |
 +-----------------------------------------------------------------------------------------+
 
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+
+RTX 3050
+
+
+xzl@minibox (master)[ggml-RW]$ build-cuda/bin/test-conv2d 1000 1000 3 1 8
+load_model: ggml tensor size    = 336 bytes
+load_model: backend buffer size = 244.21 MB
+load_model: using CUDA backend
+ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+ggml_cuda_init: found 2 CUDA devices:
+  Device 0: NVIDIA GeForce RTX 3050, compute capability 8.6, VMM: yes
+  Device 1: NVIDIA GeForce RTX 3050, compute capability 8.6, VMM: yes
+main: compute buffer size: 2441.41 MB
+
+compute_graph: Latency: 184.101893 s
+1000 times compute finished.
+main: Latency: 219.429801 s
+Main compute finished.
+Performing test:
+ggml_im2col (576000000): FAILED
+ggml_conv2d (64000000): FAILED
+
+
+xzl@minibox (master)[ggml-RW]$ build-cuda/bin/test-mul-mat 1024 1024 512 1 1
+load_model: ggml tensor size    = 336 bytes
+load_model: backend buffer size = 4195328 bytes
+load_model: using CUDA backend
+ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+ggml_cuda_init: found 2 CUDA devices:
+  Device 0: NVIDIA GeForce RTX 3050, compute capability 8.6, VMM: yes
+  Device 1: NVIDIA GeForce RTX 3050, compute capability 8.6, VMM: yes
+Matrix A: [512, 1024, 1]
+Matrix B: [512, 1024, 1]
+main: compute buffer size: 10.00 MB
+
+compute: Latency: 0.461161 s
+1000 times compute finished.
+main: Latency: 0.655310 s
+Main compute finished.
+Performing ggml_mul_mat test:
+ggml_mul_mat (1048576): FAILED
+
+
+xzl@minibox (master)[ggml-RW]$ build-cuda/bin/test-mul-mat 4096 2 2048 32 1
+
+
+load_model: ggml tensor size    = 336 bytes
+load_model: backend buffer size = 1074267136 bytes
+load_model: using CUDA backend
+ggml_cuda_init: GGML_CUDA_FORCE_MMQ:    no
+ggml_cuda_init: GGML_CUDA_FORCE_CUBLAS: no
+ggml_cuda_init: found 2 CUDA devices:
+  Device 0: NVIDIA GeForce RTX 3050, compute capability 8.6, VMM: yes
+  Device 1: NVIDIA GeForce RTX 3050, compute capability 8.6, VMM: yes
+Matrix A: [2048, 4096, 32]
+Matrix B: [2048, 2, 32]
+main: compute buffer size: 2.50 MB
+
+compute: Latency: 7.281305 s
+1000 times compute finished.
+main: Latency: 8.818512 s
+Main compute finished.
+Performing ggml_mul_mat test:
+ggml_mul_mat (262144): FAILED
 
