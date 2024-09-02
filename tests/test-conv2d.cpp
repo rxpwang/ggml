@@ -201,7 +201,7 @@ struct ggml_cgraph * compute_graph(const test_model & model, ggml_gallocr_t allo
         ggml_backend_graph_compute(model.backend, gf);
     }
     int64_t end_time = ggml_time_us();
-    printf("\nMain compute finished.");
+    printf("\n1000 times compute finished.");
     fprintf(stderr, "%s: Latency: %f s\n", __func__, (end_time - start_time) / 1000000.0);
 
     //ggml_graph_print(gf);
